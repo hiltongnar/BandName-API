@@ -16,7 +16,7 @@ write search click funtion
   -edge cases for search
   -add data structure to prevent duplicates
 */
-
+let bandExist = {};
 
 $(".submit-button").click(function() {
   event.preventDefault();
@@ -34,8 +34,19 @@ $(".submit-button").click(function() {
   }
 
   $.ajax(settings).done(function (response) {
-    console.log(response);
+
     //edge case,if api returns error return an alert
+
+    if (response.error) {
+      alert("Search yielded no results, Please try your search again.");
+      return null;
+    }
+
+    if (bandExist[response.name]) {
+      alert("Card already exists.");
+      return null;
+    }
+    bandExist[response.name] = true;
 
     let picture = response.picture_medium;
 
@@ -50,6 +61,7 @@ $(".submit-button").click(function() {
     )
     $(".close-button").click(function(){
       this.parentNode.parentNode.remove();
+      bandExist[response.name] = false;
     })
   });
 });
